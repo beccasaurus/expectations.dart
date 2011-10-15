@@ -24,4 +24,8 @@ class Expectations implements Expectable {
   void toEqual(var value) {
     Expect.equals(value, target); // Message support?
   }
+
+  void toNotEqual(var value) {
+    Expect.notEquals(value, target); // Message support?
+  }
 }

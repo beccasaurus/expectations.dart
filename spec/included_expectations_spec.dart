@@ -12,8 +12,14 @@ class IncludedExpectationsSpec extends ExpectationsSpec {
           Expect.equals("Expect.equals(expected: <bar>, actual: <foo>) fails.", exception.message);
         });
 
-        it("expect('foo').toNotEqual('foo')");
-        it("expect('foo').toNotEqual('bar')");
+        it("expect('foo').toNotEqual('bar')", (){
+          expect('foo').toNotEqual('bar');
+        });
+
+        it("expect('foo').toNotEqual('foo')", (){
+          var exception = mustThrowException(() => expect('foo').toNotEqual('foo'));
+          Expect.equals("Expect.notEquals(unexpected: <foo>, actual:<foo>) fails.", exception.message);
+        });
       });
 
     });
