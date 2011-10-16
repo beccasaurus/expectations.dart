@@ -25,7 +25,7 @@ class CustomExpectationsSpec_OverridesToEqual extends Expectations implements Ex
       Expect.fail("Expected $target to be awesome, but it was not.  Lame.");
   }
 
-  toEqual(o) { throw new ExpectException("Ha, this is our new toEqual!"); }
+  toEqual(value,[reason = null]) { throw new ExpectException("Ha, this is our new toEqual!"); }
 }
 
 class CustomExpectationsSpec extends ExpectationsSpec {

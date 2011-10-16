@@ -348,7 +348,7 @@ class SpecDocFormatter extends SpecFormatter implements SpecFormattable {
     if (pendingExamples.length > 0) {
       write("\nPending:\n");
       pendingExamples.forEach((example) {
-        String pendingReason = (example.pendingReason != null) ? " [${example.pendingReason}]" : null;
+        String pendingReason = (example.pendingReason != null) ? " [${example.pendingReason}]" : "";
         write("${example.describe.subject} ${example.name}${pendingReason}", indent: 1, color: colorForExample(example));
       });
     }

@@ -154,17 +154,17 @@ class Expectations implements Expectationable {
   Expectations(this.target);
 
   // See Expect.equals()
-  void toEqual(value) {
-    Expect.equals(value, target);
+  void toEqual(value, [String reason = null]) {
+    Expect.equals(value, target, reason: reason);
   }
 
   // See Expect.notEquals()
-  void toNotEqual(value) {
-    Expect.notEquals(value, target);
+  void toNotEqual(value, [String reason = null]) {
+    Expect.notEquals(value, target, reason: reason);
   }
 
   // See Expect.approxEquals()
-  void toApproxEqual(num value, [num tolerance = null]) {
-    Expect.approxEquals(value, target, tolerance: tolerance);
+  void toApproxEqual(num value, [num tolerance = null, String reason = null]) {
+    Expect.approxEquals(value, target, tolerance: tolerance, reason: reason);
   }
 }
