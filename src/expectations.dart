@@ -37,13 +37,14 @@ expect(var target) => Expectations.expect(target);
 // the expectationableSelectors (registered via Expectations.onExpect()) 
 // returned an instance of Expectationable that could be returned from expect()
 class NoExpectationableFoundException implements Exception {
-  var target;
+  var  target;
   bool noSelectors;
-  // TODO make sure that you can't use this.target
+
   NoExpectationableFoundException(var target, [bool noSelectors = false]) {
     this.target      = target;
     this.noSelectors = noSelectors;
   }
+
   String toString() {
     if (noSelectors == true)
       return "No Expectations.expectationableSelectors() were found.  Try calling Expectations.onExpect(fn).";
@@ -152,13 +153,18 @@ class Expectations implements Expectationable {
   // Instantiate this set of Expectations for the given target object.
   Expectations(this.target);
 
-  // Expect the given value to equal the target object.
+  // See Expect.equals()
   void toEqual(value) {
     Expect.equals(value, target);
   }
 
-  // Expect the given value to not equal the target object.
+  // See Expect.notEquals()
   void toNotEqual(value) {
     Expect.notEquals(value, target);
+  }
+
+  // See Expect.approxEquals()
+  void toApproxEqual(num value) {
+    Expect.approxEquals(value, target);
   }
 }
