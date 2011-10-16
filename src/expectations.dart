@@ -170,4 +170,28 @@ class Expectations implements Expectationable {
   void toApproxEqual(num value, [num tolerance = null, String reason = null]) {
     Expect.approxEquals(value, target, tolerance: tolerance, reason: reason);
   }
+
+  // See Expect.identical()
+  void toBeIdenticalTo(value, [String reason = null]) {
+    Expect.identical(value, target, reason: reason);
+  }
+
+  // See expect.isTrue()
+  void toBeTrue([String reason = null]) {
+    Expect.isTrue(target, reason: reason);
+  }
+
+  // See expect.isFalse()
+  void toBeFalse([String reason = null]) {
+    Expect.isFalse(target, reason: reason);
+  }
+
+  // See expect.isNull()
+  // See expect.isNotNull()
+
+  // See expect.stringEquals()
+  // See expect.listEquals()
+  // See expect.setEquals()
+
+  // See expect.throws()
 }
