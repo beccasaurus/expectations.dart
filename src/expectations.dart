@@ -161,6 +161,21 @@ class Expectations implements Expectationable {
     Expect.equals(value, target, reason: reason);
   }
 
+  // See Expect.stringEquals()
+  void toEqualString(String value, [String reason = null]) {
+    Expect.stringEquals(value, target, reason: reason);
+  }
+
+  // See Expect.listEquals()
+  void toEqualList(List value, [String reason = null]) {
+    Expect.listEquals(value, target, reason: reason);
+  }
+
+  // See Expect.setEqual()
+  void toEqualSet(Set value, [String reason = null]) {
+    Expect.setEquals(value, target, reason: reason);
+  }
+
   // See Expect.notEquals()
   void toNotEqual(value, [String reason = null]) {
     Expect.notEquals(value, target, reason: reason);
@@ -195,10 +210,6 @@ class Expectations implements Expectationable {
   void toNotBeNull([String reason = null]) {
     Expect.isNotNull(target, reason: reason);
   }
-
-  // See expect.stringEquals()
-  // See expect.listEquals()
-  // See expect.setEquals()
 
   // See expect.throws()
 }

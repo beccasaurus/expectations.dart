@@ -2,18 +2,18 @@ class IncludedExpectationsSpec extends ExpectationsSpec {
   spec() {
     describe("Expectations included with expectations.dart", (){
 
-      describe("toEqual", (){
-        it("pass", () => expect("foo").toEqual("foo"));
+      describe("expect.toEqual", (){
+        it("pass", () => expect(1).toEqual(1));
 
         it("fail", () =>
-          mustThrowException(() => expect('foo').toEqual('BAR'),
+          mustThrowException(() => expect(1).toEqual(999),
             check:   (exception) => exception is ExpectException,
-            message: "Expect.equals(expected: <BAR>, actual: <foo>) fails."));
+            message: "Expect.equals(expected: <999>, actual: <1>) fails."));
 
         it("fail with reason", () =>
-          mustThrowException(() => expect('foo').toEqual('BAR', reason: "Cuz I said so"),
+          mustThrowException(() => expect(1).toEqual(999, reason: "Cuz I said so"),
             check:   (exception) => exception is ExpectException,
-            message: "Expect.equals(expected: <BAR>, actual: <foo>, 'Cuz I said so') fails."));
+            message: "Expect.equals(expected: <999>, actual: <1>, 'Cuz I said so') fails."));
       });
 
       describe("toNotEqual", (){
@@ -126,6 +126,48 @@ class IncludedExpectationsSpec extends ExpectationsSpec {
           mustThrowException(() => expect(null).toNotBeNull(reason: "Cuz I said so"),
             check:   (exception) => exception is ExpectException,
             message: "Expect.isNotNull(actual: <null>, 'Cuz I said so') fails."));
+      });
+
+      describe("toEqualString", (){
+        it("pass", () => expect("foo").toEqualString("foo"));
+
+        it("fail", () =>
+          mustThrowException(() => expect("foo").toEqualString("bar"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.stringEquals(expected: <bar>\", <foo>) fails\nDiff:\n...[ bar} ]...\n...[ foo ]..."));
+
+        it("fail with reason", () =>
+          mustThrowException(() => expect("foo").toEqualString("bar", reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.stringEquals(expected: <bar>\", <foo>, 'Cuz I said so') fails\nDiff:\n...[ bar} ]...\n...[ foo ]..."));
+      });
+
+      describe("toEqualList", (){
+        it("pass", () => expect(["foo"]).toEqualList(["foo"]));
+
+        it("fail", () =>
+          mustThrowException(() => expect(["foo"]).toEqualList(["bar"]),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.listEquals(at index 0, expected: <bar>, actual: <foo>) fails"));
+
+        it("fail with reason", () =>
+          mustThrowException(() => expect(["foo"]).toEqualList(["bar"], reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.listEquals(at index 0, expected: <bar>, actual: <foo>, 'Cuz I said so') fails"));
+      });
+
+      describe("toEqualSet", (){
+        it("pass", () => expect(new Set.from(["foo"])).toEqualSet(new Set.from(["foo"])));
+
+        it("fail", () =>
+          mustThrowException(() => expect(new Set.from(["foo"])).toEqualSet(new Set.from(["bar"])),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.setEquals() fails\nExpected collection does not contain: bar \nExpected collection should not contain: foo "));
+
+        it("fail with reason", () =>
+          mustThrowException(() => expect(new Set.from(["foo"])).toEqualSet(new Set.from(["bar"]), reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.setEquals(, 'Cuz I said so') fails\nExpected collection does not contain: bar \nExpected collection should not contain: foo "));
       });
       
     });

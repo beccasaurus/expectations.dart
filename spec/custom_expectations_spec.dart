@@ -91,12 +91,12 @@ class CustomExpectationsSpec extends ExpectationsSpec {
         });
 
         describe("calling a build-in expectation function", (){
-          it("can pass", () => expect("foo").toEqual("foo"));
+          it("can pass", () => expect(1).toEqual(1));
 
           it("can fail", (){
-            var exception = mustThrowException(() => expect("foo").toEqual("bar"));
+            var exception = mustThrowException(() => expect(1).toEqual(999));
             Expect.isTrue(exception is ExpectException);
-            Expect.stringEquals("Expect.equals(expected: <bar>, actual: <foo>) fails.", exception.toString());
+            Expect.stringEquals("Expect.equals(expected: <999>, actual: <1>) fails.", exception.toString());
           });
         });
       });
