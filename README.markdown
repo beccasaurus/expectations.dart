@@ -135,6 +135,11 @@ class Expectations {
     }
     throw new CustomException("None of the functions that we passed this target to returned an object");
   }
+
+  static List get functionsThatTakeTarget() {
+    // this defaults to just 1 function that always returns an instance 
+    // of Expectations, where all of our build-in expectations are defined
+  }
 }
 
 class ChecksIfStringsAreAwesome {
