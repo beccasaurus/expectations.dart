@@ -1,0 +1,2 @@
+#! /bin/bash
+dart_bin --enable_type_checks samples/simple.dart && dart_bin --enable_type_checks spec/run.dart
