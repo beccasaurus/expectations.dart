@@ -221,11 +221,11 @@ end
 => "You called to_be_awesome on Foo"
 ```
 
-PHP and other languages also provide `method\_missing` like langauge features.
+PHP and other languages also provide `method_missing` like langauge features.
 
-If your language has `method\_missing` *and* mixins/open classes, then you don't 
+If your language has `method_missing` *and* mixins/open classes, then you don't 
 need the `expect(target).toFoo` DSL because you can provide: `target.shouldBeFoo` 
-by implementing your own `method\_missing` for the target class, eg. `Object` or `String`
+by implementing your own `method_missing` for the target class, eg. `Object` or `String`
 
 ### Mixins and Open Classes
 
@@ -259,7 +259,7 @@ AllExpectations.send :include, MyExpectations
 => "You called to_be_awesome on Foo"
 ```
 
-As with `method\_missing`, ofcourse, you wouldn't actually neat the `expect(target).toFoo` 
+As with `method_missing`, ofcourse, you wouldn't actually neat the `expect(target).toFoo` 
 DSL if your language has mixins/open classes, because you can extend your target's 
 class to include the methods you want, eg. extending `Object` to have a `shouldEqual` function.
 
