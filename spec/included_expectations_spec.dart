@@ -41,9 +41,9 @@ class IncludedExpectationsSpec extends ExpectationsSpec {
           expect(1.0000).toApproxEqual(1.0001);
         });
 
-        // it("expect(1.0000).toApproxEqual(1.0001, tolerance: 0.1)", (){
-        //   expect(1.0000).toApproxEqual(1.0001);
-        // });
+        it("expect(1.000).toApproxEqual(1.001, tolerance: 0.1)", (){
+          expect(1.000).toApproxEqual(1.001, tolerance: 0.1);
+        });
       });
     });
   }

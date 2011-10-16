@@ -164,7 +164,7 @@ class Expectations implements Expectationable {
   }
 
   // See Expect.approxEquals()
-  void toApproxEqual(num value) {
-    Expect.approxEquals(value, target);
+  void toApproxEqual(num value, [num tolerance = null]) {
+    Expect.approxEquals(value, target, tolerance: tolerance);
   }
 }
