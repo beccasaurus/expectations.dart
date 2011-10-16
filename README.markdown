@@ -36,7 +36,6 @@ testFoo() }
 main() {
   testFoo();
 }
-# ...
 ```
 
 You can view [expectations.dart][] or look at the [test suite][] to see more ways 
