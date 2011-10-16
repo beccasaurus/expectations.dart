@@ -166,7 +166,7 @@ main() {
 
 So that's how we do it!
 
-NOTE: a major problem with the above example is that it naively returns a 
+**NOTE:** a major problem with the above example is that it naively returns a 
 ChecksIfStringsAreAwesome for *all* strings so `expect("Foo").toEqual("Bar") 
 won't work because the ChecksIfStringsAreAwesome class has no toEqual function.
 
