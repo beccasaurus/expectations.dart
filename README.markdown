@@ -6,8 +6,21 @@ Expectations
 Installing
 ----------
 
+    wget https://raw.github.com/remi/expectations.dart/master/src/expectations.dart
+
 Usage
 -----
+
+```actionscript
+#include("expectations.dart");
+
+# ...
+```
+
+Adding Custom Expectations
+--------------------------
+
+...
 
 A Word about Implementation
 ---------------------------

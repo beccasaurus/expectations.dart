@@ -99,6 +99,34 @@ class IncludedExpectationsSpec extends ExpectationsSpec {
             check:   (exception) => exception is ExpectException,
             message: "Expect.isFalse(true, 'Cuz I said so') fails."));
       });
+
+      describe("toBeNull", (){
+        it("pass", () => expect(null).toBeNull());
+
+        it("fail", () =>
+          mustThrowException(() => expect("Not NULL").toBeNull(),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.isNull(actual: <Not NULL>) fails."));
+
+        it("fail with reason", () =>
+          mustThrowException(() => expect("Not NULL").toBeNull(reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.isNull(actual: <Not NULL>, 'Cuz I said so') fails."));
+      });
+
+      describe("toNotBeNull", (){
+        it("pass", () => expect("Not NULL").toNotBeNull());
+
+        it("fail", () =>
+          mustThrowException(() => expect(null).toNotBeNull(),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.isNotNull(actual: <null>) fails."));
+
+        it("fail with reason", () =>
+          mustThrowException(() => expect(null).toNotBeNull(reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.isNotNull(actual: <null>, 'Cuz I said so') fails."));
+      });
       
     });
   }

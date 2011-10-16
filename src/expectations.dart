@@ -187,7 +187,14 @@ class Expectations implements Expectationable {
   }
 
   // See expect.isNull()
+  void toBeNull([String reason = null]) {
+    Expect.isNull(target, reason: reason);
+  }
+
   // See expect.isNotNull()
+  void toNotBeNull([String reason = null]) {
+    Expect.isNotNull(target, reason: reason);
+  }
 
   // See expect.stringEquals()
   // See expect.listEquals()
