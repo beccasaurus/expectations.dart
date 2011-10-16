@@ -8,13 +8,38 @@ class CustomExpectationsSpec_Expectationable implements Expectationable {
   }
 }
 
+class CustomExpectationsSpec_ExpectationsSubclass extends Expectations implements Expectationable {
+  CustomExpectationsSpec_ExpectationsSubclass(var target) { this.target = target; }
+
+  toBeAwesome() {
+    if (! target.toString().toLowerCase().contains("awesome", 0))
+      Expect.fail("Expected $target to be awesome, but it was not.  Lame.");
+  }
+}
+
+class CustomExpectationsSpec_OverridesToEqual extends Expectations implements Expectationable {
+  CustomExpectationsSpec_OverridesToEqual(var target) { this.target = target; }
+
+  toBeAwesome() {
+    if (! target.toString().toLowerCase().contains("awesome", 0))
+      Expect.fail("Expected $target to be awesome, but it was not.  Lame.");
+  }
+
+  toEqual(o) { throw new ExpectException("Ha, this is our new toEqual!"); }
+}
+
 class CustomExpectationsSpec extends ExpectationsSpec {
   spec() {
     describe("Custom Expectations", (){
+
+      // Reset the Expectations before and after each test
+      before(() => Expectations.setDefaultExpectationableSelector());
       after(() => Expectations.setDefaultExpectationableSelector());
 
       it("throws a regular ol' NoSuchMethodException if the expectation method you call doesn't exist", (){
-        pending("TODO");
+        var exception = mustThrowException(() => expect("foo").toBeUnknownMethod());
+        Expect.isTrue(exception is NoSuchMethodException);
+        Expect.isTrue(exception.toString().contains("function name: 'toBeUnknownMethod'", 0));
       });
 
       describe("When there are no expectationable selectors", (){
@@ -40,9 +65,7 @@ class CustomExpectationsSpec extends ExpectationsSpec {
       describe("overriding expectations by always returning a custom Expectationable", (){
         before(() => Expectations.setExpectationableSelector((target) => new CustomExpectationsSpec_Expectationable(target)));
 
-        it("my custom expectation can pass OK", (){
-          expect("is totally awesome").toBeAwesome();
-        });
+        it("my custom expectation can pass OK", () => expect("is totally awesome").toBeAwesome());
 
         it("my custom expectation can fail OK", (){
           var exception = mustThrowException(() => expect("is lame").toBeAwesome());
@@ -52,13 +75,66 @@ class CustomExpectationsSpec extends ExpectationsSpec {
       });
 
       describe("adding expectations by extending Expectations", (){
-        it("can call my new expectation");
-        it("can call a built-in expectation");
+        before(() => Expectations.setExpectationableSelector((target) => new CustomExpectationsSpec_ExpectationsSubclass(target)));
+
+        it("always uses our subclass",        () => Expect.isTrue(expect('anything') is CustomExpectationsSpec_ExpectationsSubclass));
+        it("our subclass is an Expectations", () => Expect.isTrue(expect('anything') is Expectations));
+
+        describe("calling my custom expectation function", (){
+          it("can pass", () => expect("is totally awesome").toBeAwesome());
+
+          it("can fail", (){
+            var exception = mustThrowException(() => expect("lame").toBeAwesome());
+            Expect.isTrue(exception is ExpectException);
+            Expect.stringEquals("Expect.fail('Expected lame to be awesome, but it was not.  Lame.')", exception.toString());
+          });
+        });
+
+        describe("calling a build-in expectation function", (){
+          it("can pass", () => expect("foo").toEqual("foo"));
+
+          it("can fail", (){
+            var exception = mustThrowException(() => expect("foo").toEqual("bar"));
+            Expect.isTrue(exception is ExpectException);
+            Expect.stringEquals("Expect.equals(expected: <bar>, actual: <foo>) fails.", exception.toString());
+          });
+        });
       });
 
-      describe("overriding expectations by extending Expectations");
-      describe("adding expectations by registering new Expectations instances");
+      describe("overriding expectations by extending Expectations", (){
+        it("behaves normally if we use the default Expectations", (){
+          expect("foo").toEqual("foo");
+          expect("foo").toNotEqual("bar");
+        });
 
+        it("behaves differently when we use our custom Expectations subclass", (){
+          Expectations.setExpectationableSelector((target) => new CustomExpectationsSpec_OverridesToEqual(target));
+
+          // toEqual() throws an exception now
+          var exception = mustThrowException(() => expect("foo").toEqual("foo"));
+          Expect.stringEquals("Ha, this is our new toEqual!", exception.toString());
+
+          // But other functions still work 
+          expect("foo").toNotEqual("bar");
+        });
+      });
+
+      describe("adding expectations by registering new Expectations instances via onExpect()", (){
+        it("our custom expectation doesn't work before we register our Expectations with onExpect()", (){
+          pending("need to figure out if the befores are all running correctly, etc etc ... :/");
+          var exception = mustThrowException(() => expect("foo").toBeAwesome());
+          // Expect.isTrue(exception is NoSuchMethodException);
+          //print("EX $exception");
+          //Expect.isTrue(exception.toString().contains("function name: 'toBeAwesome'", 0));
+        });
+
+        it("our custom expectation works after we register our Expectations with onExpect()", (){
+          //Expectations.onExpect((target) => new CustomExpectationsSpec_OverridesToEqual(target));
+          //expect("foo").toBeAwesome();
+        });
+
+        it("our custom expectation can override default ones based on the type of the target object");
+      });
     });
   }
 }

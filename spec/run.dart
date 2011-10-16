@@ -21,7 +21,7 @@ class ExpectationsSpec extends Spec {
 }
 
 int main() {
-  // SpecExample.raiseExceptions = true;
+  SpecExample.raiseExceptions = true;
   Specs.run([
     new IncludedExpectationsSpec(),
     new CustomExpectationsSpec()
