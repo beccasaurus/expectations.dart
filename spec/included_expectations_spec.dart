@@ -169,6 +169,34 @@ class IncludedExpectationsSpec extends ExpectationsSpec {
             check:   (exception) => exception is ExpectException,
             message: "Expect.setEquals(, 'Cuz I said so') fails\nExpected collection does not contain: bar \nExpected collection should not contain: foo "));
       });
+
+      describe("toThrow", (){
+        it("pass", () => expect((){ throw new NotImplementedException(); }).toThrow());
+
+        it("fail", () =>
+          mustThrowException(() => expect(() => null).toThrow(),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.throws() fails"));
+
+        it("fail with reason", () =>
+          mustThrowException(() => expect(() => null).toThrow(reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.throws(, 'Cuz I said so') fails"));
+      });
+
+      describe("toThrow with check", (){
+        it("pass", () => expect((){ throw new NotImplementedException(); }).toThrow((ex) => ex is NotImplementedException));
+
+        it("fail", () =>
+          mustThrowException(() => expect((){ throw new NotImplementedException(); }).toThrow((ex) => ex is NoSuchMethodException),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.isTrue(false) fails."));
+
+        it("fail with reason", () =>
+          mustThrowException(() => expect((){ throw new NotImplementedException(); }).toThrow((ex) => ex is NoSuchMethodException, reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.isTrue(false) fails."));
+      });
       
     });
   }

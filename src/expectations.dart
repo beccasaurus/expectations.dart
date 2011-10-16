@@ -212,4 +212,7 @@ class Expectations implements Expectationable {
   }
 
   // See expect.throws()
+  void toThrow([check = null, String reason = null]) {
+    Expect.throws(target, check: check, reason: reason);
+  }
 }
