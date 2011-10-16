@@ -128,8 +128,8 @@ class Expectations {
     //
     // We have a list of functions that, given a target, return either null or an instance of 
     // a class that expect() should return ... hopefully one which has a toBeAwesome() function!
-    for (var function in functionsThatTakeTarget) {
-      var objectToReturn = function(target);
+    for (var fn in functionsThatTakeTarget) {
+      var objectToReturn = fn(target);
       if (objectToReturn != null)
         return objectToReturn;
     }
