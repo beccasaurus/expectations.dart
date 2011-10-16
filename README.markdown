@@ -300,7 +300,7 @@ class Expectations {
     // Without any reflection, we can't even get the type of the object passed, although we can 
     // check it against types we already know about, eg. if (target is String)
     // 
-    // So ... how do we determins what to return?
+    // So ... how do we determine what to return?
     //
     // We have a list of functions that, given a target, return either null or an instance of 
     // a class that expect() should return ... hopefully one which has a toBeAwesome() function!
