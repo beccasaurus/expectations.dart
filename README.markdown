@@ -178,9 +178,8 @@ our default expecations which you can override or you can add your own.
 
 Gilad Bracha has been quoted saying *"[Dart] will eventually have mirror-based reflection"* [1][]
 
-I don't actually know what this means, although I have some ideas.  Once we se what Dart's 
-future features are, we'll be able to (eventually) take advantage of them to provide 
-DSLs like the one for Expectations.
+Once we se what Dart's future features are, we'll be able to (eventually) take advantage 
+of them to provide DSLs like the one for Expectations.
 
 License
 -------
