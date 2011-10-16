@@ -9,7 +9,7 @@ class IncludedExpectationsSpec extends ExpectationsSpec {
 
         it("expect('foo').toEqual('bar')", (){
           var exception = mustThrowException(() => expect('foo').toEqual('bar'));
-          Expect.equals("Expect.equals(expected: <bar>, actual: <foo>) fails.", exception.message);
+          Expect.equals("Expect.equals(expected: <bar>, actual: <foo>) fails.", exception.toString());
         });
 
         it("expect('foo').toNotEqual('bar')", (){
@@ -18,7 +18,7 @@ class IncludedExpectationsSpec extends ExpectationsSpec {
 
         it("expect('foo').toNotEqual('foo')", (){
           var exception = mustThrowException(() => expect('foo').toNotEqual('foo'));
-          Expect.equals("Expect.notEquals(unexpected: <foo>, actual:<foo>) fails.", exception.message);
+          Expect.equals("Expect.notEquals(unexpected: <foo>, actual:<foo>) fails.", exception.toString());
         });
       });
 

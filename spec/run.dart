@@ -20,7 +20,10 @@ class ExpectationsSpec extends Spec {
   } 
 }
 
-int main() => Specs.run([
-  new IncludedExpectationsSpec(),
-  new CustomExpectationsSpec()
-]);
+int main() {
+  // SpecExample.raiseExceptions = true;
+  Specs.run([
+    new IncludedExpectationsSpec(),
+    new CustomExpectationsSpec()
+  ]);
+}
