@@ -16,7 +16,7 @@ The current implementation of expectations is crap.
 
 So how would you normally implement something like this?
 
-Here's what we want: `expect(Dynamic object).toSomeCustomMethod()`
+Remember, here's the DSL we want: `expect(Dynamic object).toSomeCustomMethod()`
 
 ### Method Missing
 
@@ -93,7 +93,7 @@ C# has a unique compiler feature which could help you implement the `expect(targ
 but can also provide you with the ability to essentially "add new methods" to exising classes, 
 like you get with mixins/open classes.
 
-```charp
+```c#
 public static class MyExpectations {
   public static void shouldBeAwesome(this Object target) {
     Console.WriteLine("You called toBeAwesome with {0}", target);

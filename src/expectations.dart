@@ -66,6 +66,9 @@ class NoExpectationableFoundException implements Exception {
 // See Expectations.onExpect() to use your own custom Expectationable.
 class Expectations implements Expectationable {
 
+  // Returns the vurrent version of Expectations
+  static final VERSION = "0.1.0";
+
   static List<ExpectationableSelectorFunction> _expectationableSelectors;
   static ExpectationableSelectorFunction       _defaultExpectationableSelector;
 
