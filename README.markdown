@@ -107,7 +107,79 @@ public class Program {
 }
 ```
 
+### Our Dart Implementation
+
+Here's a general overview of our current implementation:
+
+```actionscript
+expect(var target) => Expectations.expect(target);
+
+class Expectations {
+  static expect(target) {
+    // We have access to the target object here, eg. "Foo" if we called `expect("Foo").toBeAwesome()`
+    //
+    // Unfortunately, we can't see what function is being called ... so we have to guess what object 
+    // to return (which will hopefully have a toBeAwesome() function) based purely on the target object.
+    // 
+    // Without any reflection, we can't even get the type of the object passed, although we can 
+    // check it against types we already know about, eg. if (target is String)
+    // 
+    // So ... how do we determins what to return?
+    //
+    // We ask you.  We have a list of functions that, given a target, return either null or an 
+    // instance of a class that expect() should return (one that hopefully has toBeAwesome()!)
+    for (var function in functionsThatTakeTarget) {
+      var objectToReturn = function(target);
+      if (objectToReturn != null)
+        return objectToReturn;
+    }
+    throw new CustomException("None of the functions that we passed this target to returned an object");
+  }
+}
+
+class ChecksIfStringsAreAwesome {
+  var target;
+  ChecksIfStringsAreAwesome(this.target);
+  toBeAwesome() {
+    print("you called toBeAwesome for $target");
+  }
+}
+
+main() {
+  // Register our own function that returns our custom 
+  // class which checks strings for awesomeness.
+  Expectations.onExpect((target) {
+    if (target is String)
+      return new ChecksIfStringsAreAwesome(target);
+    else
+      return null;
+  });
+
+  expect("Foo").toBeAwesome();
+}
+```
+
+So that's how we do it!
+
+NOTE: a major problem with the above example is that it naively returns a 
+ChecksIfStringsAreAwesome for *all* strings so `expect("Foo").toEqual("Bar") 
+won't work because the ChecksIfStringsAreAwesome class has no toEqual function.
+
+To help deal with this, all of the built-in expectations in Expectations are 
+defined on the `Expectations` class so, if you subclass it, you'll get all of 
+our default expecations which you can override or you can add your own.
+
+### Future Dart Implementation
+
+Gilad Bracha has been quoted saying "[Dart] will eventually have mirror-based reflection" [1][]
+
+I don't actually know what this means, although I have some ideas.  Once we se what Dart's 
+future features are, we'll be able to (eventually) take advantage of them to provide 
+DSLs like the one for Expectations.
+
 License
 -------
 
 expectations is released under the MIT license.
+
+[1]: http://www.dartforce.com/doc/index.html
