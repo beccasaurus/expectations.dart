@@ -101,7 +101,7 @@ class Expectations implements Expectationable {
   // were registered via onExpect() until we finally find an Expectationable class 
   // to return from expect() (or an Exception will be thrown if none are found).
   static void onExpect(ExpectationableSelectorFunction fn) {
-    expectationableSelectors.insertRange(0, 1, fn);
+    _addToStartOfList(expectationableSelectors, fn);
   }
 
   // When given an ExpectationableSelectorFunction, this clears out all other 
@@ -135,6 +135,15 @@ class Expectations implements Expectationable {
     if (expectationable == null)
       throw new NoExpectationableFoundException(target);
     return expectationable;
+  }
+
+  // List.insertRange isn't implemented yet, so here's a hack 
+  // that gives you a new list with the given object at the front.
+  static void _addToStartOfList(List list, var object) {
+    var tempList = new List.from(list);
+    list.clear();
+    list.add(object);
+    tempList.forEach((item) => list.add(item));
   }
 
   // The target object that was passed to this set of Expectations

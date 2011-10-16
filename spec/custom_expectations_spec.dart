@@ -121,19 +121,36 @@ class CustomExpectationsSpec extends ExpectationsSpec {
 
       describe("adding expectations by registering new Expectations instances via onExpect()", (){
         it("our custom expectation doesn't work before we register our Expectations with onExpect()", (){
-          pending("need to figure out if the befores are all running correctly, etc etc ... :/");
-          var exception = mustThrowException(() => expect("foo").toBeAwesome());
-          // Expect.isTrue(exception is NoSuchMethodException);
-          //print("EX $exception");
-          //Expect.isTrue(exception.toString().contains("function name: 'toBeAwesome'", 0));
+          var exception = mustThrowException(() => expect("totally awesome").toBeAwesome());
+          Expect.isTrue(exception is NoSuchMethodException);
+          Expect.isTrue(exception.toString().contains("function name: 'toBeAwesome'", 0));
         });
 
         it("our custom expectation works after we register our Expectations with onExpect()", (){
-          //Expectations.onExpect((target) => new CustomExpectationsSpec_OverridesToEqual(target));
-          //expect("foo").toBeAwesome();
+          Expectations.onExpect((target) => new CustomExpectationsSpec_OverridesToEqual(target));
+          expect("totally awesome").toBeAwesome();
         });
 
-        it("our custom expectation can override default ones based on the type of the target object");
+        it("our custom expectation can override default ones based on the type of the target object", (){
+          expect(1).toEqual(1);
+          expect("foo").toEqual("foo");
+          
+          // If we pass a String to expect(), return a CustomExpectationsSpec_OverridesToEqual (which will throw an Exception)
+          Expectations.onExpect((target) {
+            if (target is String)
+              return new CustomExpectationsSpec_OverridesToEqual(target);
+            else
+              return null; // fall back to the default set of expectations
+          });
+
+          // expect(int)'s toEqual works fine ...
+          expect(1).toEqual(1);
+
+          // but expect(String)'s toEqual blows up!
+          var exception = mustThrowException(() => expect("foo").toEqual("foo"));
+          Expect.isTrue(exception is ExpectException);
+          Expect.stringEquals("Ha, this is our new toEqual!", exception.toString());
+        });
       });
     });
   }
