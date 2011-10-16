@@ -5,6 +5,7 @@ class SpecDescribe {
   static void beforeRun(Function callback) => _beforeFunctions.add(callback);
   static void afterRun(Function callback) => _afterFunctions.add(callback);
   Spec spec;
+  SpecDescribe parent;
   String subject;
   Function fn;
   List<SpecExample> examples;
@@ -12,7 +13,8 @@ class SpecDescribe {
   List befores;
   List afters;
   bool _evaluatedFn;
-  SpecDescribe([Spec spec = null, String subject = null, Function fn = null]) {
+  List<SpecDescribe> _parentDescribes;
+  SpecDescribe([Spec spec = null, SpecDescribe parent = null, String subject = null, Function fn = null]) {
     if (_beforeFunctions == null) _beforeFunctions = new List<Function>();
     if (_afterFunctions == null)  _afterFunctions = new List<Function>();
     this.spec      = spec;
@@ -22,6 +24,7 @@ class SpecDescribe {
     this.describes = new List<SpecDescribe>();
     this.befores   = new List();
     this.afters    = new List();
+    this.parent    = parent;
   }
   void evaluate() {
     if (_evaluatedFn != true) {
@@ -29,12 +32,35 @@ class SpecDescribe {
       if (fn != null) fn();
     }
   }
+  List<SpecDescribe> get parentDescribes() {
+    if (_parentDescribes == null) {
+      List<SpecDescribe> tempDescribes = new List<SpecDescribe>();
+      SpecDescribe       currentParent = parent;
+      while (currentParent != null) {
+        tempDescribes.add(currentParent);
+        currentParent = currentParent.parent;
+      }
+      _parentDescribes = new List<SpecDescribe>();
+      var times = tempDescribes.length;
+      for (int i = 0; i < times; i++)
+        _parentDescribes.add(tempDescribes.removeLast());
+    }   
+    return _parentDescribes;
+  }
+  void runBefores() {
+    befores.forEach((fn) => fn());
+  }
+  void runAfters() {
+    afters.forEach((fn) => fn());
+  }
   void run() {
     _beforeFunctions.forEach((fn) => fn(this));
     examples.forEach((example) {
-      befores.forEach((fn) => fn());
+      parentDescribes.forEach((parent) => parent.runBefores());
+      runBefores();
       example.run();
-      afters.forEach((fn) => fn());
+      runAfters();
+      parentDescribes.forEach((parent) => parent.runAfters());
     });
     describes.forEach((desc) => desc.run());
     _afterFunctions.forEach((fn) => fn(this));
@@ -191,7 +217,8 @@ class Spec {
   }
   void spec() {}
   SpecDescribe describe([String subject = null, Function fn = null]) {
-    SpecDescribe describe = new SpecDescribe(spec: this, subject: subject, fn: fn);
+    SpecDescribe parent   = _currentDescribes.length == 0 ? null : _currentDescribes.last();
+    SpecDescribe describe = new SpecDescribe(spec: this, subject: subject, fn: fn, parent: parent);
     if (_currentDescribes.length == 0)
       describes.add(describe);
     else
