@@ -1,6 +1,8 @@
 Expectations
 ------------
 
+**UPDATE COMING SOON, thanks to addition of noSuchMethod()**
+
 Expectations is a small Dart library that gives you a more BDD-style way 
 to write your `Expect` assertions.
 
