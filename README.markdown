@@ -356,6 +356,12 @@ Gilad Bracha has been quoted saying *"[Dart] will eventually have mirror-based r
 Once we se what Dart's future features are, we'll be able to (eventually) take advantage 
 of them to provide DSLs like the one for Expectations.
 
+Possible Future Features
+------------------------
+
+ * Extract out a general proxy pattern helper? 
+ * Do people like the name of `expect()` and the expectations, eg. `toEqual` - if not, should we rename?
+
 License
 -------
 
