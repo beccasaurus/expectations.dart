@@ -1,7 +1,14 @@
 Expectations
 ------------
 
-**UPDATE COMING SOON, thanks to addition of noSuchMethod()**
+## HERE BE DRAGONS
+
+The implementation of expectations is about to *completely* change due 
+to the addition of `noSuchMethod()`.
+
+**UPDATE COMING SOON - please don't use expectations yet!**
+
+## About
 
 Expectations is a small Dart library that gives you a more BDD-style way 
 to write your `Expect` assertions.
