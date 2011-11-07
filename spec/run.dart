@@ -1,11 +1,11 @@
-#import("../lib/spec.dart");
+#import("../lib/bullseye.dart");
 #import("../src/expectations.dart");
 
 #source("included_expectations_spec.dart");
 #source("custom_expectations_spec.dart");
 
 // Spec baseclass with helper methods, etc.
-class ExpectationsSpec extends Spec {
+class ExpectationsSpec extends BullseyeSpec {
 
   // Given a function of code to run, this fails unless the function throws 
   // an exception when run.
@@ -37,9 +37,8 @@ class ExpectationsSpec extends Spec {
 }
 
 int main() {
-  SpecExample.raiseExceptions = true;
-  Specs.run([
-    new IncludedExpectationsSpec(),
-    new CustomExpectationsSpec()
+  Bullseye.run([
+    new IncludedExpectationsSpec()
+    // new CustomExpectationsSpec()
   ]);
 }
