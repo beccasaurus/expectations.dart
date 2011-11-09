@@ -1,8 +1,17 @@
 #import("../lib/bullseye.dart");
 #import("../src/expectations.dart");
 
-#source("included_expectations_spec.dart");
+//#source("included_expectations_spec.dart");
 #source("custom_expectations_spec.dart");
+#source("core_expectations_spec.dart");
+
+int main() {
+  Bullseye.run([
+    // new IncludedExpectationsSpec()
+    new CustomExpectationsSpec(),
+    new CoreExpectationsSpec()
+  ]);
+}
 
 // Spec baseclass with helper methods, etc.
 class ExpectationsSpec extends BullseyeSpec {
@@ -34,11 +43,22 @@ class ExpectationsSpec extends BullseyeSpec {
 
     return exception;
   } 
-}
 
-int main() {
-  Bullseye.run([
-    new IncludedExpectationsSpec()
-    // new CustomExpectationsSpec()
-  ]);
+  // Our custom DSL-thingy for testing expectations in a terse yet easy to read way.
+  void example([String description = null, Function fn = null]) {
+    describe(description: description, fn: fn);
+  }
+  void shouldPass(Function fn) {
+    it("pass", ()=> expect(1).equals(1));
+  }
+  shouldFail([code = null, bool check(Exception) = null, String message = null]) {
+    it("fail", (){
+      mustThrowException(code: code, check: check, message: message);
+    });
+  }
+  shouldFailWithReason([code = null, bool check(Exception) = null, String message = null]) {
+    it("fail", (){
+      mustThrowException(code: code, check: check, message: message);
+    });
+  }
 }

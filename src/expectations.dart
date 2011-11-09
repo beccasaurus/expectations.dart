@@ -1,5 +1,8 @@
 #library("expectations");
 
+// expect(foo) returns an Expectationable object that has the functions 
+// you want to call on it, eg. isNull for expect(foo).isNull
+//
 // An Expectationable class has a constructor that takes any type 
 // of object and provides functions that make Expect assertions on 
 // that object, eg. new MyExpectationable("Foo").toEqual("Bar")
@@ -75,7 +78,7 @@ class Expectations implements Expectationable {
   // Default ExpectationableSelectorFunction that we include in 
   // expectationableSelectors which always returns an instance of Expectations
   static ExpectationableSelectorFunction get defaultExpectationableSelector() {
-    if (_defaultExpectationableSelector == null)
+    if (_defaultExpectationableSelector === null)
       _defaultExpectationableSelector = (target) => new Expectations(target);
     return _defaultExpectationableSelector;
   }
@@ -88,7 +91,7 @@ class Expectations implements Expectationable {
   // that has been instantiated with the target object, allowing us to 
   // return that from expect().
   static List<ExpectationableSelectorFunction> get expectationableSelectors() {
-    if (_expectationableSelectors == null) {
+    if (_expectationableSelectors === null) {
       _expectationableSelectors = new List<ExpectationableSelectorFunction>();
       _expectationableSelectors.add(defaultExpectationableSelector);
     }
@@ -133,10 +136,10 @@ class Expectations implements Expectationable {
     Expectationable expectationable;
     for (ExpectationableSelectorFunction selector in expectationableSelectors) {
       expectationable = selector(target);
-      if (expectationable != null)
+      if (expectationable !== null)
         break;
     }
-    if (expectationable == null)
+    if (expectationable === null)
       throw new NoExpectationableFoundException(target);
     return expectationable;
   }
@@ -205,5 +208,55 @@ class Expectations implements Expectationable {
   // See expect.throws()
   void toThrow([check = null, String reason = null]) {
     Expect.throws(target, check: check, reason: reason);
+  }
+}
+
+class CoreExpectations implements Expectationable {
+  var target;
+  CoreExpectations(this.target);
+
+  /** See Expect.equals. */
+  void equals(var value, [String reason = null]) {
+    Expect.equals(value, target, reason: reason);
+  }
+
+  /** See equals. */
+  operator ==(var object) {
+    equals(object);
+  }
+
+  /** See Expect.approxEquals. */
+  void approxEquals(num value, [num tolerance = null, String reason = null]) {
+    Expect.approxEquals(value, target, tolerance: tolerance, reason: reason);
+  }
+
+  /** See expect.isTrue(). */
+  void isTrue([String reason = null]) {
+    Expect.isTrue(target, reason: reason);
+  }
+
+  /** See expect.isFalse(). */
+  void isFalse([String reason = null]) {
+    Expect.isFalse(target, reason: reason);
+  }
+
+  /** See expect.isNull().  */
+  void isNull([String reason = null]) {
+    Expect.isNull(target, reason: reason);
+  }
+
+  /** See expect.isNotNull(). */
+  void isNotNull([String reason = null]) {
+    Expect.isNotNull(target, reason: reason);
+  }
+
+  /** See Expect.listEquals(). */
+  void equalsCollection(Collection value, [String reason = null]) {
+    Expect.listEquals(value, target, reason: reason);
+  }
+
+  /** See Expect.setEqual(). */
+  void equalsSet(Iterable value, [String reason = null]) {
+    Expect.setEquals(value, target, reason: reason);
   }
 }

@@ -1,3 +1,5 @@
+// Fixture Classes
+
 class CustomExpectationsSpec_Expectationable implements Expectationable {
   var target;
   CustomExpectationsSpec_Expectationable(this.target);
@@ -9,7 +11,7 @@ class CustomExpectationsSpec_Expectationable implements Expectationable {
 }
 
 class CustomExpectationsSpec_ExpectationsSubclass extends Expectations implements Expectationable {
-  CustomExpectationsSpec_ExpectationsSubclass(var target) { this.target = target; }
+  CustomExpectationsSpec_ExpectationsSubclass(var target) : super(target);
 
   toBeAwesome() {
     if (! target.toString().toLowerCase().contains("awesome", 0))
@@ -18,7 +20,7 @@ class CustomExpectationsSpec_ExpectationsSubclass extends Expectations implement
 }
 
 class CustomExpectationsSpec_OverridesToEqual extends Expectations implements Expectationable {
-  CustomExpectationsSpec_OverridesToEqual(var target) { this.target = target; }
+  CustomExpectationsSpec_OverridesToEqual(var target) : super(target);
 
   toBeAwesome() {
     if (! target.toString().toLowerCase().contains("awesome", 0))
@@ -27,6 +29,8 @@ class CustomExpectationsSpec_OverridesToEqual extends Expectations implements Ex
 
   toEqual(value,[reason = null]) { throw new ExpectException("Ha, this is our new toEqual!"); }
 }
+
+// Test!
 
 class CustomExpectationsSpec extends ExpectationsSpec {
   spec() {
