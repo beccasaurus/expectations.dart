@@ -31,7 +31,7 @@ typedef Expectationable ExpectationableSelectorFunction(var target);
 // If you want to implement your own expectations so 
 // you can call expect("Foo").toSomethingCustom(), 
 // see Expectations.onExpect()
-expect(var target) => Expectations.expect(target);
+Expectationable expect(var target) => Expectations.expect(target);
 
 // Exception that is thrown when expect() is called but none of 
 // the expectationableSelectors (registered via Expectations.onExpect()) 
@@ -105,7 +105,7 @@ class Expectations implements Expectationable {
   // were registered via onExpect() until we finally find an Expectationable class 
   // to return from expect() (or an Exception will be thrown if none are found).
   static void onExpect(ExpectationableSelectorFunction fn) {
-    _addToStartOfList(expectationableSelectors, fn);
+    expectationableSelectors.insertRange(0, 1, fn);
   }
 
   // When given an ExpectationableSelectorFunction, this clears out all other 
@@ -139,15 +139,6 @@ class Expectations implements Expectationable {
     if (expectationable == null)
       throw new NoExpectationableFoundException(target);
     return expectationable;
-  }
-
-  // List.insertRange isn't implemented yet, so here's a hack 
-  // that gives you a new list with the given object at the front.
-  static void _addToStartOfList(List list, var object) {
-    var tempList = new List.from(list);
-    list.clear();
-    list.add(object);
-    tempList.forEach((item) => list.add(item));
   }
 
   // The target object that was passed to this set of Expectations
