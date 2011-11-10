@@ -67,7 +67,7 @@ different API:
 In support of both common APIs, you can configure Expectations to use [ToBeExpectations][] instead of 
 [CoreExpectations][].
 
-### How do I create new expectation methods?
+### How do I create/register new expectation methods?
 
 Let's say you want to implement `expect().toBeAwesome`.  First, you need to make a class with the `toBeAwesome` 
 methods on it.  The `expect()` method will return an instance of your class, so `toBeAwesome` can be called on it:
@@ -101,7 +101,7 @@ that from `expect()`.
 Now you can call `expect("foo").toBeAwesome()`.  But what happens when you try to call `expect("foo").equals("bar")`? 
 Your `AwesomeExpectations` class doesn't have an `equals` function, so it'll blow up with a `NoSuchMethodException`!
 
-### How do I create new expectation methods & still support the default ones?
+### Extending CoreExpectations
 
 Let's say that you want to add a new `toBeAwesome` expectation method, but you still want to be able to use 
 all of the default expectations, eg. `equals`, `isNull`, etc.
