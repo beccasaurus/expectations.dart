@@ -1,381 +1,169 @@
-Expectations
-------------
+# Expectations
 
-## HERE BE DRAGONS
+**Website:** [http://remi.github.com/expectations.dart][web]
 
-The implementation of expectations is about to *completely* change due 
-to the addition of `noSuchMethod()`.
+[Dart][] comes out of the box with a good set of expectations via [Expect][].
 
-**UPDATE COMING SOON - please don't use expectations yet!**
+Unfortunately, there are some problems with Expect:
 
-## About
+ 1. There's no way to extend it to add additional expectations, so you would have to 
+use Expect for some expectations and MyExpect for others.  Not ideal.
+ 2. Not everyone likes the `Expect.equals(A, B)` syntax.  I always forget, which 
+argument is the actual and which one is the expected?  Ugh.
 
-Expectations is a small Dart library that gives you a more BDD-style way 
-to write your `Expect` assertions.
+Enter `expectations.dart`!
 
-**Built-in:** `Expect.equals("Rover", dog.name)`
+## Get it!
 
-**Using Expectations:** `expect(dog.name).toEqual("Rover")`
+**NOTE:** this link isn't live yet!
 
-Although this is purely a syntactical feature, many find this syntax to 
-be much easier to read.
+Download [the latest version of **expectations.dart**][latest]
 
-Another benefit that this provides is the ability to seamlessly add your 
-own functions that will be callable as `expect("foo").toBeMyCustomExpectation()`
-
-As Dart doesn't provide any sort of mixins, you cannot add your own static 
-functions to the `Expect` class, so you cannot have `Expect.myCustomExpectation("foo")`. 
-
-Installing
-----------
-
-    wget https://raw.github.com/remi/expectations.dart/master/src/expectations.dart
-
-Usage
------
+## Usage
 
 ```actionscript
-#include("expectations.dart");
+#import("expectations.dart");
 
-testFoo() }
-  var foo = new Foo(name: "Foo");
-  expect(foo.name).toEqual("Foo");
+testWithoutExpectations() {
+  Expect.equals("Rover", dog.name);
 }
 
-main() {
-  testFoo();
+testWithExpectations() {
+  expect(dog.name).equals("Rover");
 }
 ```
 
-You can view [expectations.dart][] or look at the [test suite][] to see more ways 
-to use Expectations and to see all of the expectation functions we provide, out of the box.
+That's pretty much all there is to it!
 
-### Supported Expectation Functions
+### What methods can I call?
 
-At the moment, we support every function that `Expect` provides (but we haven't 
-added any new, useful expectation functions).
+Expectations comes out of the box with support for every method that [Expect][] has:
 
-Here's a list of all of Expectations functions and the Expect functions that they call:
+ * `Expect.approxEquals` becomes `expect().approxEquals`
+ * `Expect.equals` becomes `expect().equals`
+ * `Expect.fail` becomes `expect().fail`
+ * ... etc ...
+ * See [CoreExpectations][] for API documentation for all methods
 
-    toEqual(value, [String reason = null])
-    Expect.equals(value, target, reason: reason)
+Our [CoreExpectations][] were designed to be as similar to [Expect][]'s methods as possible. 
+We also based this on [another implementation][unittest_expect] of `expect()` that's used in the Dart [unittest][] 
+test framework, trying to match their implementation as much as possible.
 
-    toEqualString(String value, [String reason = null])
-    Expect.stringEquals(value, target, reason: reason)
+### ToBeExpectations
 
-    toEqualList(List value, [String reason = null])
-    Expect.listEquals(value, target, reason: reason)
+Out of the box, Expectations' methods look like: 
 
-    toEqualSet(Set value, [String reason = null])
-    Expect.setEquals(value, target, reason: reason)
+ * `expect().equals`
+ * `expect().isNull`
+ * `expect().identical`
 
-    toNotEqual(value, [String reason = null])
-    Expect.notEquals(value, target, reason: reason)
+While this is a perfectly acceptable API, another popular testing framework ([Jasmine][]) has a slightly 
+different API:
 
-    toApproxEqual(num value, [num tolerance = null, String reason = null])
-    Expect.approxEquals(value, target, tolerance: tolerance, reason: reason)
+ * `expect().toEqual`
+ * `expect().toBeNull`
+ * `expect().toBe`
 
-    toBeIdenticalTo(value, [String reason = null])
-    Expect.identical(value, target, reason: reason)
+In support of both common APIs, you can configure Expectations to use [ToBeExpectations][] instead of 
+[CoreExpectations][].
 
-    toBeTrue([String reason = null])
-    Expect.isTrue(target, reason: reason)
+### How do I create new expectation methods?
 
-    toBeFalse([String reason = null])
-    Expect.isFalse(target, reason: reason)
-
-    toBeNull([String reason = null])
-    Expect.isNull(target, reason: reason)
-
-    toNotBeNull([String reason = null])
-    Expect.isNotNull(target, reason: reason)
-
-    toThrow([check = null, String reason = null])
-    Expect.throws(target, check: check, reason: reason)
-
-Adding Custom Expectations
---------------------------
-
-Okay, so let's say that your application has a custom Dog class.
-
-You would like to write some custom expectations so that, in your 
-specs, you can write something like:
+Let's say you want to implement `expect().toBeAwesome`.  First, you need to make a class with the `toBeAwesome` 
+methods on it.  The `expect()` method will return an instance of your class, so `toBeAwesome` can be called on it:
 
 ```actionscript
-testDogCreation() {
-  var dog = new Dog.withBreed("Golden Retriever");
-  expect(dog).toBeBreed("GoldenRetriever");
-}
-```
-
-To make that work, the call to `expect(dog)` will need to 
-return an object that has a `toBeBreed` function.
-
-Expectations provides a hook that we call whenever `expect()` 
-is called.  We pass the argument that was given to expect, 
-eg. `"foo"` in `expect("foo")`, to the hook the the hook function 
-can either return:
-
- * an object that has the expectation functions that you want, eg. `toBeBreed`
- * null, letting us know that your hook won't return an object, so we'll call the next hook
-
-Here's what it would look like:
-
-```actionscript
-class DogExpectations {
-  var dog;
-  DogExpectations(this.dog);
-
-  toBeBreed(breedName) {
-    expect(dog.breed).toNotBeNull(reason: "Breed was null when checking for breed: $breedName");
-    expect(dog.breed.name).toEqualString(breedName, reason: "Expected dog breed <$breedName> but was <${dog.breed.name}>");
-  }
-}
-
-main() {
-  Expectations.onExpect((target) =>
-    return (target is Dog) ? new DogExpectations(target) : null);
-
-  // ...
-}
-```
-
-The call to `Expectations.onExpect()` lets you register a hook that 
-we call with the target object.  You can check to see if the 
-`target is Dog` and, if it is, return your custom object with 
-custom expectations for Dog objects, eg. `toBeBreed`.
-
-### Adding Custom Expectations to core classes
-
-Okay, so the above example works great if you want to add custom expectations 
-to a custom class of yours, eg. `Dog`.
-
-But what if you want to add custom expectations to core Dart classes like String?
-
-If you try to use the above implementation and return your custom object 
-`if (target is String)`, that's problematic because you'll try to call something 
-like `expect("foo").toEqual("bar")` and that'll throw a NoSuchMethodException 
-because your custom object was returned (because the target is a String) and 
-your custom object doesn't implement the `toEqual` expectation.
-
-To get around this, all of expectations that are built into Expectations are defined 
-in the `Expectations` class, making it easy for you to subclass it, giving 
-you all of our built-in expectations.
-
-```actionscript
-class MyAwesomeSetofStringExpectations extends Expectations {
-  MyAwesomeSetofStringExpectations(target){ this.target = target; }
-
-  toBeAwesomeExpectation() {
-    // I've added a new custom expectation here.
-    // Because I've extended Expectations, I also have all 
-    // of the built-in expectations like toEqual, toBeNull, etc.
-  }
-
-  // I can also override the build-in expectation functions!
-  toEqualString(String otherString, [String reason = null]) {
-    // my awesome, much better toEqualString implementation
-  }
-}
-
-main() {
-  Expectations.onExpect((target) =>
-    return (target is String) ? new MyAwesomeSetofStringExpectations(target) : null);
-
-  // ...
-}
-```
-
-I realize that this isn't ideal ... but it works.
-
-My favorite part of this implementation is that it gives you full control over what 
-object you want to return from `expect()`.  You can just provide us with a function 
-via `Expectations.onExpect` that figures out an object to return based on the target 
-object provided ... you can write that logic however makes sense for you.
-
-A Word about Implementation
----------------------------
-
-The current implementation of expectations is kinda crap, in my opinion.
-
-So how would you normally implement something like this?
-
-Remember, here's the DSL we want: `expect(Dynamic object).toSomeCustomMethod()`
-
-### Method Missing
-
-Here's how we might implement this in Ruby:
-
-```ruby
-def expect(target)
-  ExpectProxy.new(target)
-end
-
-class ExpectProxy
-  attr_accessor :target
-
-  def initialize(target)
-    self.target = target
-  end
-
-  def method_missing(method_name, *method_arguments)
-    # In here, we can look at the method_name and 
-    # dynamically determine what we want to do
-    "You called #{method_name} on #{target}"
-  end
-end
-
->> expect("Foo").to_be_awesome
-=> "You called to_be_awesome on Foo"
-```
-
-PHP and other languages also provide `method_missing` like langauge features.
-
-If your language has `method_missing` *and* mixins/open classes, then you don't 
-need the `expect(target).toFoo` DSL because you can provide: `target.shouldBeFoo` 
-by implementing your own `method_missing` for the target class, eg. `Object` or `String`
-
-### Mixins and Open Classes
-
-If your language gives you the ability to dynamically add methods to 
-existing classes, eg. via including a module or some other mechanism, 
-you could always implement expectations by adding the methods directly 
-onto the objects that you want, eg.
-
-```ruby
-class AllExpectations
-  # def to_equal
-  # def whatever_else
-end
-
-def expect(target)
-  AllExpectations.new(target)
-end
-
-module MyExpectations
-  def to_be_awesome
-    "You called to_be_awesome on #{target}"
-  end
-end
-
-# Extend AllExpectations so it also includes the 
-# methods defined in our MyExpectations module.
-
-AllExpectations.send :include, MyExpectations
-
->> expect("Foo").to_be_awesome
-=> "You called to_be_awesome on Foo"
-```
-
-As with `method_missing`, ofcourse, you wouldn't actually neat the `expect(target).toFoo` 
-DSL if your language has mixins/open classes, because you can extend your target's 
-class to include the methods you want, eg. extending `Object` to have a `shouldEqual` function.
-
-### Extension Methods
-
-C# has a unique compiler feature which could help you implement the `expect(target).toFoo` DSL 
-but can also provide you with the ability to essentially "add new methods" to exising classes, 
-like you get with mixins/open classes.
-
-```c#
-public static class MyExpectations {
-  public static void shouldBeAwesome(this Object target) {
-    Console.WriteLine("You called toBeAwesome with {0}", target);
-  }
-}
-
-public class Program {
-  public static void main(string[] args) {
-    "foo".shouldBeAwesome();
-  }
-}
-```
-
-### Our Dart Implementation
-
-Here's a general overview of our current implementation:
-
-```actionscript
-expect(var target) => Expectations.expect(target);
-
-class Expectations {
-  static expect(target) {
-    // We have access to the target object here, eg. "Foo" if we called `expect("Foo").toBeAwesome()`
-    //
-    // Unfortunately, we can't see what function is being called ... so we have to guess what object 
-    // to return (which will hopefully have a toBeAwesome() function) based purely on the target object.
-    // 
-    // Without any reflection, we can't even get the type of the object passed, although we can 
-    // check it against types we already know about, eg. if (target is String)
-    // 
-    // So ... how do we determine what to return?
-    //
-    // We have a list of functions that, given a target, return either null or an instance of 
-    // a class that expect() should return ... hopefully one which has a toBeAwesome() function!
-    for (var fn in functionsThatTakeTarget) {
-      var objectToReturn = fn(target);
-      if (objectToReturn != null)
-        return objectToReturn;
-    }
-    throw new CustomException("None of the functions that we passed this target to returned an object");
-  }
-
-  static List get functionsThatTakeTarget() {
-    // this defaults to just 1 function that always returns an instance 
-    // of Expectations, where all of our build-in expectations are defined
-  }
-}
-
-class ChecksIfStringsAreAwesome {
+class AwesomeExpectations {
   var target;
-  ChecksIfStringsAreAwesome(this.target);
+
+  // When expect() is called with an object, eg. expect("foo"), 
+  // we instantiate a new instance of the Expectation class, passing 
+  // it the target object, eg. "foo" in the case of expect("foo")
+  AwesomeExpectations(this.target);
+
   toBeAwesome() {
-    print("you called toBeAwesome for $target");
+    Expect.isTrue(target.isAwesome);
   }
-}
-
-main() {
-  // Register our own function that returns our custom 
-  // class which checks strings for awesomeness.
-  Expectations.onExpect((target) {
-    if (target is String)
-      return new ChecksIfStringsAreAwesome(target);
-    else
-      return null;
-  });
-
-  expect("Foo").toBeAwesome();
 }
 ```
 
-So that's how we do it!
+Now that you have your class, we need to tell Expectations to return a `new AwesomeExpectations(target)` whenever 
+`expect()` is called, instead of returning the default ([CoreExpectations][]).
 
-**NOTE:** a major problem with the above example is that it naively returns a 
-ChecksIfStringsAreAwesome for *all* strings so `expect("Foo").toEqual("Bar") 
-won't work because the ChecksIfStringsAreAwesome class has no toEqual function.
+```actionscript
+Expectations.onExpect((target) => new AwesomeExpectations(target));
+```
 
-To help deal with this, all of the built-in expectations in Expectations are 
-defined on the `Expectations` class so, if you subclass it, you'll get all of 
-our default expecations which you can override or you can add your own.
+That's it!  Now, whenever `expect()` is called, we will call the closure that you passed to onExpect, 
+passing it the target object so you can instantiate a `new AwesomeExpectations(target)` and we'll return 
+that from `expect()`.
 
-### Future Dart Implementation
+Now you can call `expect("foo").toBeAwesome()`.  But what happens when you try to call `expect("foo").equals("bar")`? 
+Your `AwesomeExpectations` class doesn't have an `equals` function, so it'll blow up with a `NoSuchMethodException`!
 
-Gilad Bracha has been quoted saying *"[Dart] will eventually have mirror-based reflection"* [1][]
+### How do I create new expectation methods & still support the default ones?
 
-Once we se what Dart's future features are, we'll be able to (eventually) take advantage 
-of them to provide DSLs like the one for Expectations.
+Let's say that you want to add a new `toBeAwesome` expectation method, but you still want to be able to use 
+all of the default expectations, eg. `equals`, `isNull`, etc.
 
-Possible Future Features
-------------------------
+The easiest say to do this is to simply make your custom expectation class `extend CoreExpectations`, which 
+is where all of our default expectations are defined.
 
- * Extract out a general proxy pattern helper? 
- * Do people like the name of `expect()` and the expectations, eg. `toEqual` - if not, should we rename?
+```actionscript
+// If your class extends CoreExpectations, you'll get all of our 
+// default expectations.  Note: you can also extend ToBeExpectations.
+class AwesomeExpectations extends CoreExpectations {
 
-License
--------
+  // CoreExpectations already has a target field so you 
+  // can simply call the parent constructor.
+  AwesomeExpectations(var target) : super(target);
 
-expectations is released under the MIT license.
+  // Add you own expectations
+  toBeAwesome(){ Expect(target.isAwesome).isTrue }
 
-[1]:                 http://www.dartforce.com/doc/index.html
-[expectations.dart]: https://github.com/remi/expectations.dart/blob/master/src/expectations.dart
-[test suite]:        https://github.com/remi/expectations.dart/tree/master/spec
+  // Or even override the defaults!
+  equals(value, [String reason = null]) {
+    // my awesome implementation
+  }
+}
+```
+
+That's great, but let's say that we want to make a couple of different classes, each providing 
+expectations for a specific class, eg. `DogExpectations` and `CatExpectations`, because the 
+`Dog` and `Cat` classes are business objects that we work with a lot.
+
+The closure that you pass to `Expectations.onExpect` can return null to "opt-out" of returning 
+an instance of your Expectation class.
+
+```actionscript
+// Register our Expectation classes
+Expectations.onExpect((target) => (target is Dog) ? DogExpectations : null);
+Expectations.onExpect((target) => (target is Cat) ? CatExpectations : null);
+
+// This works because "foo" isn't a Dog/Cat so we'll get CoreExpectations as usual
+expect("foo").equals(5);
+
+// This works because we're passing a Dog so we'll get a DogExpectations
+// (assuming DogExpectations implements the 'isBreed' method)
+expect(rover).isBreed("Golden Retriever");
+
+// This will work *if* your DogExpectations class extends CoreExpectations 
+// or if your DogExpectations has its own 'identical' method
+expect(rover).identical(rex);
+```
+
+That's really all there is to it.
+
+## License
+
+Expectations is released under the [MIT license][mit].
+
+[latest]:           https://raw.github.com/remi/expectations.dart/master/pkg/expectations.dart
+[web]:              http://remi.github.com/expectations.dart
+[Dart]:             http://www.dartlang.org/
+[Expect]:           http://www.dartlang.org/docs/api/Expect.html#Expect::Expect
+[unittest]:         http://code.google.com/p/dart/source/browse/trunk/dart/client/testing/unittest/unittest.dart
+[unittest_expect]:  http://code.google.com/p/dart/source/browse/trunk/dart/client/testing/unittest/shared.dart?r=1334#41
+[CoreExpectations]: http://remi.github.com/expectations.dart/CoreExpectations.html#CoreExpectations::CoreExpectations
+[ToBeExpectations]: http://remi.github.com/expectations.dart/ToBeExpectations.html#ToBeExpectations::ToBeExpectations
+[Jasmine]:          http://pivotal.github.com/jasmine/
