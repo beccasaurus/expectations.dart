@@ -167,3 +167,4 @@ Expectations is released under the [MIT license][mit].
 [CoreExpectations]: http://remi.github.com/expectations.dart/CoreExpectations.html#CoreExpectations::CoreExpectations
 [ToBeExpectations]: http://remi.github.com/expectations.dart/ToBeExpectations.html#ToBeExpectations::ToBeExpectations
 [Jasmine]:          http://pivotal.github.com/jasmine/
+[mit]:              http://www.opensource.org/licenses/mit-license.php
