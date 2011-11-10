@@ -98,7 +98,10 @@ That's it!  Now, whenever `expect()` is called, we will call the closure that yo
 passing it the target object so you can instantiate a `new AwesomeExpectations(target)` and we'll return 
 that from `expect()`.
 
-Now you can call `expect("foo").toBeAwesome()`.  But what happens when you try to call `expect("foo").equals("bar")`? 
+Now you can call `expect("foo").toBeAwesome()`.
+
+Okay, but now what happens when you try to call `expect("foo").equals("bar")`?
+
 Your `AwesomeExpectations` class doesn't have an `equals` function, so it'll blow up with a `NoSuchMethodException`!
 
 ### Extending CoreExpectations
