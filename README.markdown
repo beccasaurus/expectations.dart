@@ -70,7 +70,7 @@ In support of both common APIs, you can configure Expectations to use [ToBeExpec
 ### How do I create/register new expectation methods?
 
 Let's say you want to implement `expect().toBeAwesome`.  First, you need to make a class with the `toBeAwesome` 
-methods on it.  The `expect()` method will return an instance of your class, so `toBeAwesome` can be called on it:
+method on it.  The `expect()` method will return an instance of your class, so `toBeAwesome` can be called on it:
 
 ```actionscript
 class AwesomeExpectations {
