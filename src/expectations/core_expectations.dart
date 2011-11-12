@@ -12,8 +12,18 @@
  */
 class CoreExpectations implements Expectationable {
   var target;
+  bool positive;
 
-  CoreExpectations(this.target);
+  CoreExpectations(target) {
+    this.target   = target;
+    this.positive = true;
+  }
+
+  CoreExpectations get not() {
+    var core = new CoreExpectations(target);
+    core.positive = false;
+    return core;
+  }
 
   /** See Expect.approxEquals. */
   void approxEquals(num expected, [num tolerance = null, String reason = null]) {
@@ -22,7 +32,10 @@ class CoreExpectations implements Expectationable {
 
   /** See Expect.equals. */
   void equals(var expected, [String reason = null]) {
-    Expect.equals(expected, target, reason: reason);
+    if (positive == true)
+      Expect.equals(expected, target, reason: reason);
+    else
+      Expect.notEquals(expected, target, reason: reason);
   }
 
   /** See [equals]. */

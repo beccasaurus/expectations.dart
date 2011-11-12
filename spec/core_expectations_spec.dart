@@ -32,7 +32,10 @@ class CoreExpectationsSpec extends ExpectationsSpec {
 
       // Expect.equals(<dynamic> expected, <dynamic> actual, [String reason = null])
       example("expect().equals", (){
-        shouldPass(()=> expect(1).equals(1));
+        shouldPass(() {
+          expect(1).equals(1);
+          expect(1).not.equals(2);
+        });
 
         shouldFail(() => expect(1).equals(999),
           check:   (exception) => exception is ExpectException,
