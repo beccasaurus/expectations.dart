@@ -57,7 +57,7 @@ class ExpectationsSpec extends BullseyeSpec {
     });
   }
   shouldFailWithReason([code = null, bool check(Exception) = null, String message = null]) {
-    it("fail", (){
+    it("fail with reason", (){
       mustThrowException(code: code, check: check, message: message);
     });
   }
