@@ -26,8 +26,26 @@ class CoreExpectations implements Expectationable {
   }
 
   /** See Expect.approxEquals. */
-  void approxEquals(num expected, [num tolerance = null, String reason = null]) {
-    Expect.approxEquals(expected, target, tolerance: tolerance, reason: reason);
+  void approxEquals(num expected, [num tolerance = 0.000100, String reason = null]) {
+    if (positive) {
+      Expect.approxEquals(expected, target, tolerance: tolerance, reason: reason);
+    } else {
+      ExpectException expectedException = null;
+      try {
+        Expect.approxEquals(expected, target, tolerance: tolerance, reason: reason);
+      } catch (ExpectException ex) {
+        print("APPROX-EQUALS - caught Exception!  $ex");
+        expectedException = ex;
+      }
+      if (expectedException == null) {
+        String reasonText = (reason == null) ? '' : ", '$reason'";
+        throw new ExpectException("Expect.not.approxEquals(unexpected:<$expected>, actual:<$target>, tolerance:<$tolerance>$reasonText) fails"); // add reason
+      } else if (expectedException.toString().startsWith("Expect.approxEquals")) {
+        // Do nothing, this is a success!
+      } else {
+        throw expectedException; // Unexpected Exception
+      }
+    }
   }
 
   /** See Expect.equals. */

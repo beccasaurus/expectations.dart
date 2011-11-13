@@ -13,20 +13,22 @@ int main() {
   ]);
 }
 
-// Spec baseclass with helper methods, etc.
+/** Spec baseclass with helper methods, etc. */
 class ExpectationsSpec extends BullseyeSpec {
 
-  // Given a function of code to run, this fails unless the function throws 
-  // an exception when run.
-  //
-  // You may optionally pass a String message and we'll assert that the 
-  // message is equal to the Exception's message.
-  //
-  // You may optionally pass a check function which is given the Exception 
-  // that was thrown and should return true, or else an assertion will be raised.
-  //
-  // If you want to perform additional assertions on the Exception thrown, 
-  // this method returns the original Exception.
+  /**
+   * Given a function of code to run, this fails unless the function throws 
+   * an exception when run.
+   *
+   * You may optionally pass a String message and we'll assert that the 
+   * message is equal to the Exception's message.
+   *
+   * You may optionally pass a check function which is given the Exception 
+   * that was thrown and should return true, or else an assertion will be raised.
+   *
+   * If you want to perform additional assertions on the Exception thrown, 
+   * this method returns the original Exception.
+   */
   Exception mustThrowException([code = null, bool check(Exception) = null, String message = null]) {
     var exception = null;
     try {
@@ -44,19 +46,25 @@ class ExpectationsSpec extends BullseyeSpec {
     return exception;
   } 
 
-  // Our custom DSL-thingy for testing expectations in a terse yet easy to read way.
+  /** Our custom DSL-thingy for testing expectations in a terse yet easy to read way. */
   void example([String description = null, Function fn = null]) {
     describe(description: description, fn: fn);
   }
+
+  /** Adds an it("pass") with the given function. */
   void shouldPass(Function fn) {
-    it("pass", ()=> expect(1).equals(1));
+    it("pass", fn);
   }
-  shouldFail([code = null, bool check(Exception) = null, String message = null]) {
+
+  /** Adds an it("fail") and passes the given arguments along to [mustThrowException]. */
+  shouldFail([Function code = null, bool check(Exception) = null, String message = null]) {
     it("fail", (){
       mustThrowException(code: code, check: check, message: message);
     });
   }
-  shouldFailWithReason([code = null, bool check(Exception) = null, String message = null]) {
+
+  /** Adds an it("fail with reason") and passes the given arguments along to [mustThrowException]. */
+  shouldFailWithReason([Function code = null, bool check(Exception) = null, String message = null]) {
     it("fail with reason", (){
       mustThrowException(code: code, check: check, message: message);
     });

@@ -17,6 +17,18 @@ class CoreExpectationsSpec extends ExpectationsSpec {
           check:   (exception) => exception is ExpectException,
           message: "Expect.approxEquals(expected:<1.001000>, actual:<1.000000>, tolerance:<0.000100>, 'Cuz I said so') fails");
 
+        example("not", (){
+          shouldPass(() => expect(1.0000).not.approxEquals(1.001));
+
+          shouldFail(() => expect(1.0000).not.approxEquals(1.0001),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.not.approxEquals(unexpected:<1.000100>, actual:<1.000000>, tolerance:<0.000100>) fails");
+
+          shouldFailWithReason(() => expect(1.0000).not.approxEquals(1.0001, reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.not.approxEquals(unexpected:<1.000100>, actual:<1.000000>, tolerance:<0.000100>, 'Cuz I said so') fails");
+        });
+
         example("with tolerance", (){
           shouldPass(() => expect(1.000).approxEquals(1.001, tolerance: 0.1));
 
@@ -32,10 +44,7 @@ class CoreExpectationsSpec extends ExpectationsSpec {
 
       // Expect.equals(<dynamic> expected, <dynamic> actual, [String reason = null])
       example("expect().equals", (){
-        shouldPass(() {
-          expect(1).equals(1);
-          expect(1).not.equals(2);
-        });
+        shouldPass(()=> expect(1).equals(1));
 
         shouldFail(() => expect(1).equals(999),
           check:   (exception) => exception is ExpectException,
@@ -44,6 +53,18 @@ class CoreExpectationsSpec extends ExpectationsSpec {
         shouldFailWithReason(() => expect(1).equals(999, reason: "Cuz I said so"),
           check:   (exception) => exception is ExpectException,
           message: "Expect.equals(expected: <999>, actual: <1>, 'Cuz I said so') fails.");
+
+        example("not", (){
+          shouldPass(()=> expect(1).not.equals(2));
+
+          shouldFail(() => expect(1).not.equals(1),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.notEquals(unexpected: <1>, actual:<1>) fails.");
+
+          shouldFailWithReason(() => expect(1).not.equals(1, reason: "Cuz I said so"),
+            check:   (exception) => exception is ExpectException,
+            message: "Expect.notEquals(unexpected: <1>, actual:<1>, 'Cuz I said so') fails.");
+        });
 
         example("alias: expect() == 1", (){
           shouldPass(()=> expect(1) == 1);
