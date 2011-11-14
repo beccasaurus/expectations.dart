@@ -1,6 +1,6 @@
 class ToBeExpectationsSpec extends ExpectationsSpec {
   spec(){
-    example("ToBeExpectations (default expectations)", (){
+    example("ToBeExpectations", (){
 
       before(() => 
         Expectations.onExpect((target) => new ToBeExpectations(target)));
