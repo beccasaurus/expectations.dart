@@ -2,6 +2,8 @@
 
 **Website:** [http://remi.github.com/expectations.dart][web]
 
+**Source:** [https://github.com/remi/expectations.dart](https://github.com/remi/expectations.dart)
+
 [Dart][] comes out of the box with a good set of expectations via [Expect][].
 
 Unfortunately, there are some problems with Expect:
