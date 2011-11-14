@@ -1,5 +1,6 @@
 #import("../lib/bullseye.dart");
-#import("../src/expectations.dart");
+// #import("../src/expectations.dart");
+#import("../pkg/expectations.dart");
 
 #source("custom_expectations_spec.dart");
 #source("core_expectations_spec.dart");

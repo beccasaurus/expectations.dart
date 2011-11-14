@@ -1,0 +1,35 @@
+#! /usr/bin/env ruby
+# TODO re-write this in Dart
+require 'fileutils'
+
+def package library_file, target_file
+  puts "Packaging #{library_file} -> #{target_file}"
+  
+  # Make the target file so we can write to it
+  FileUtils.mkdir_p File.dirname(target_file)
+  target = File.open target_file, 'w+'
+  write_dart_source_file_to_target library_file, target
+  target.close
+
+  puts "Done."
+end
+
+def write_dart_source_file_to_target source_file, target
+  if File.file? source_file
+    puts "  -> #{source_file}"
+    target.puts "/* #{source_file} */"
+    File.read(source_file).split("\n").each do |line|
+      if line =~ /^#source\(['"]([^\)]+)['"]\)/
+        dir  = File.dirname(source_file)
+        path = File.join(dir, $1)
+        write_dart_source_file_to_target path, target
+      else
+        target.puts line
+      end
+    end
+  else
+    puts "Source library not found: #{source_file}"
+  end
+end
+
+package "src/expectations.dart", "pkg/expectations.dart"
