@@ -24,10 +24,16 @@ Download [the latest version of **expectations.dart**][latest]
 
 testWithoutExpectations() {
   Expect.equals("Rover", dog.name);
+  Expect.notEquals("Spot", dog.name);
+  Expect.stringEquals("Rover", dog.name);
+  Expect.identical(expectedDog, dog);
 }
 
 testWithExpectations() {
-  expect(dog.name).equals("Rover");
+  expect(dog.name) == "Rover";
+  expect(dog.name).not == "Rover";
+  expect(dog.name).equalsString("Rover"); // or toEqualString  [ToBeExpectations]
+  expect(dog).identical(expectedDog);     // or toBe           [ToBeExpectations]
 }
 ```
 
