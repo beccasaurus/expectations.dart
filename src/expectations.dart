@@ -4,6 +4,7 @@
 #source("expectations/expectationable_selector.dart");
 #source("expectations/no_expectationable_found_exception.dart");
 #source("expectations/core_expectations.dart");
+#source("expectations/to_be_expectations.dart");
 
 /**
  * The expect() function is defined globally so you can easily call 

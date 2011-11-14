@@ -4,12 +4,14 @@
 //#source("included_expectations_spec.dart");
 #source("custom_expectations_spec.dart");
 #source("core_expectations_spec.dart");
+#source("to_be_expectations_spec.dart");
 
 int main() {
   Bullseye.run([
     // new IncludedExpectationsSpec()
     new CustomExpectationsSpec(),
-    new CoreExpectationsSpec()
+    new CoreExpectationsSpec(),
+    new ToBeExpectationsSpec()
   ]);
 }
 
