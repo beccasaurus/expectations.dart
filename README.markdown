@@ -36,11 +36,6 @@ testWithExpectations() {
   expect(dog.name).not == "Rover";
   expect(dog.name).equalsString("Rover");
   expect(dog).identical(expectedDog);
-
-  // Optionally using ToBeExpectations (see below for more info)
-  Expectations.onExpect((target) => new ToBeExpectations(target));
-  expect(dog.name).toEqualString("Rover");
-  expect(dog).toBe(expectedDog);
 }
 ```
 
