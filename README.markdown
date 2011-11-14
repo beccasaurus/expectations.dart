@@ -1,7 +1,5 @@
 # Expectations
 
-### NOT RELEASED YET - CHECK BACK TOMORROW
-
 **Website:** [http://remi.github.com/expectations.dart][web]
 
 [Dart][] comes out of the box with a good set of expectations via [Expect][].
@@ -16,8 +14,6 @@ argument is the actual and which one is the expected?  Ugh.
 Enter `expectations.dart`!
 
 ## Get it!
-
-**NOTE:** this link isn't live yet!
 
 Download [the latest version of **expectations.dart**][latest]
 
