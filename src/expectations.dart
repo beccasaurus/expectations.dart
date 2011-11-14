@@ -15,7 +15,7 @@
  * you can call expect("Foo").toSomethingCustom(), 
  * see Expectations.onExpect()
  */
-Expectationable expect(var target) => Expectations.expect(target);
+Expectationable expect([var target = null]) => Expectations.expect(target);
 
 /**
  * [Expectations] houses the logic for the top-level [:expect():] 
